@@ -1,0 +1,13 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: gitflow-manager-binding
+  namespace: gitflow
+subjects:
+- kind: ServiceAccount
+  name: gitflow-manager-sa
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: gitflow-manager-role
+  apiGroup: ""

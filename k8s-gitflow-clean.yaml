@@ -1,0 +1,34 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: k8s-gitflow-cleanup
+  namespace: gitflow
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: k8s-gitflow-cleanup
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: gitflow-manager-sa
+          containers:
+            - name: k8s-gitflow-cleanup
+              image: registry.beeketing.com/hongtran/k8s-gitflow-clean:v0.1.0
+              command: ["/bin/bash", "/bin/k8s-gitflow-clean.sh"]
+              imagePullPolicy: Always
+              env:
+              - name: NAMESPACE
+                value: "gitflow"
+                name: DAYS
+                value: "12"
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 50Mi
+          imagePullSecrets:
+            - name: registry
+        
